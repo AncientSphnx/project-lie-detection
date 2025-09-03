@@ -6,12 +6,7 @@ import {
   Play, 
   Pause, 
   Square, 
-  Zap,
-  Volume2,
-  FileAudio,
-  BarChart3,
-  TrendingUp,
-  Activity
+  Zap
 } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
@@ -25,10 +20,12 @@ export const VoiceAnalysis: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [result, setResult] = useState<{ prediction: string; confidence: number } | null>(null)
+
   const [stream, setStream] = useState<MediaStream | null>(null)
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
   const [recordingTime, setRecordingTime] = useState(0)
-  
+
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -38,6 +35,7 @@ export const VoiceAnalysis: React.FC = () => {
       setAudioFile(file)
       const url = URL.createObjectURL(file)
       setAudioUrl(url)
+      setResult(null) // reset old result
     }
   }
 
@@ -59,6 +57,7 @@ export const VoiceAnalysis: React.FC = () => {
         const url = URL.createObjectURL(blob)
         setAudioUrl(url)
         setAudioFile(new File([blob], 'recording.wav', { type: 'audio/wav' }))
+        setResult(null) // reset old result
       }
       
       recorder.start()
@@ -78,10 +77,7 @@ export const VoiceAnalysis: React.FC = () => {
       mediaRecorder.stop()
       setIsRecording(false)
       
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      }
-      
+      if (intervalRef.current) clearInterval(intervalRef.current)
       if (stream) {
         stream.getTracks().forEach(track => track.stop())
         setStream(null)
@@ -102,17 +98,29 @@ export const VoiceAnalysis: React.FC = () => {
   }
 
   const analyzeAudio = async () => {
-    if (!audioUrl) return
-
+    if (!audioFile) return
     setIsAnalyzing(true)
-    
-    // TODO: Connect to your Python voice detection model here
-    // Example: const result = await fetch('/api/voice-analysis', { method: 'POST', body: audioData })
-    
-    // Placeholder - remove this when connecting to your Python model
-    alert('Voice analysis will be connected to your Python model. Audio ready for processing.')
-    
-    setIsAnalyzing(false)
+
+    try {
+      const formData = new FormData()
+      formData.append('file', audioFile)
+
+      const response = await fetch('http://127.0.0.1:8000/predict', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) throw new Error('Failed to analyze audio')
+
+      const data = await response.json()
+      console.log('Prediction result:', data)
+      setResult(data) // update state
+    } catch (error) {
+      console.error('Error analyzing audio:', error)
+      setResult({ prediction: 'Error', confidence: 0 })
+    } finally {
+      setIsAnalyzing(false)
+    }
   }
 
   const formatTime = (seconds: number) => {
@@ -127,122 +135,72 @@ export const VoiceAnalysis: React.FC = () => {
       <AnalysisNavigation />
       
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <h1 className="text-4xl font-display font-bold mb-4 text-blue-600">
-          Voice Analysis
-        </h1>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+        <h1 className="text-4xl font-display font-bold mb-4 text-blue-600">Voice Analysis</h1>
         <p className="text-muted-foreground text-lg">
           Analyze vocal patterns, stress indicators, and speech characteristics for deception detection
         </p>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Audio Input Section */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
+        {/* Input Section */}
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
           <Card className="shadow-elegant-lg bg-card/50 backdrop-blur-sm border-blue-600/30">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Mic className="h-5 w-5 text-blue-600" />
                 Audio Input
               </CardTitle>
-              <CardDescription>
-                Upload an audio file or record your voice for analysis
-              </CardDescription>
+              <CardDescription>Upload an audio file or record your voice for analysis</CardDescription>
             </CardHeader>
-            
             <CardContent className="space-y-6">
-              {/* File Upload */}
+              {/* Upload */}
               <div className="space-y-2">
                 <Label htmlFor="audioFile">Upload Audio File</Label>
-                <Input
-                  id="audioFile"
-                  type="file"
-                  accept="audio/*"
-                  onChange={handleFileUpload}
-                  className="cursor-pointer"
-                />
+                <Input id="audioFile" type="file" accept="audio/*" onChange={handleFileUpload} className="cursor-pointer" />
               </div>
 
-              {/* Recording Controls */}
+              {/* Record */}
               <div className="space-y-4">
                 <Label>Record Audio</Label>
                 <div className="flex items-center gap-4">
                   {!isRecording ? (
-                    <Button
-                      onClick={startRecording}
-                      variant="outline"
-                      size="lg"
-                    >
+                    <Button onClick={startRecording} variant="outline" size="lg">
                       <Mic className="h-4 w-4 mr-2" />
                       Start Recording
                     </Button>
                   ) : (
-                    <Button
-                      onClick={stopRecording}
-                      variant="destructive"
-                      size="lg"
-                    >
+                    <Button onClick={stopRecording} variant="destructive" size="lg">
                       <Square className="h-4 w-4 mr-2" />
                       Stop Recording
                     </Button>
                   )}
-                  
+
                   {isRecording && (
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-                      <span className="text-sm font-mono">
-                        {formatTime(recordingTime)}
-                      </span>
+                      <span className="text-sm font-mono">{formatTime(recordingTime)}</span>
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Audio Playback */}
+              {/* Playback */}
               {audioUrl && (
                 <div className="space-y-4">
                   <Label>Audio Preview</Label>
                   <div className="flex items-center gap-4">
-                    <Button
-                      onClick={togglePlayback}
-                      variant="outline"
-                      size="sm"
-                    >
-                      {isPlaying ? (
-                        <Pause className="h-4 w-4" />
-                      ) : (
-                        <Play className="h-4 w-4" />
-                      )}
+                    <Button onClick={togglePlayback} variant="outline" size="sm">
+                      {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                     </Button>
-                    <span className="text-sm text-muted-foreground">
-                      {audioFile?.name || 'Recording'}
-                    </span>
+                    <span className="text-sm text-muted-foreground">{audioFile?.name || 'Recording'}</span>
                   </div>
-                  <audio
-                    ref={audioRef}
-                    src={audioUrl}
-                    onEnded={() => setIsPlaying(false)}
-                    className="hidden"
-                  />
+                  <audio ref={audioRef} src={audioUrl} onEnded={() => setIsPlaying(false)} className="hidden" />
                 </div>
               )}
 
-              {/* Analyze Button */}
-              <Button
-                onClick={analyzeAudio}
-                disabled={!audioUrl || isAnalyzing}
-                variant="brand"
-                size="lg"
-                className="w-full"
-              >
+              {/* Analyze */}
+              <Button onClick={analyzeAudio} disabled={!audioUrl || isAnalyzing} variant="brand" size="lg" className="w-full">
                 {isAnalyzing ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2" />
@@ -259,23 +217,26 @@ export const VoiceAnalysis: React.FC = () => {
           </Card>
         </motion.div>
 
-        {/* Results Section */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
+        {/* Results */}
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
           <Card className="shadow-elegant-lg bg-card/50 backdrop-blur-sm border-muted/30">
             <CardContent className="flex items-center justify-center h-96">
-              <div className="text-center space-y-4">
-                <Mic className="h-16 w-16 text-muted-foreground mx-auto" />
-                <h3 className="text-xl font-display font-semibold text-muted-foreground">
-                  Ready for Voice Analysis
-                </h3>
-                <p className="text-muted-foreground max-w-sm">
-                  Upload an audio file or record your voice, then click "Analyze Voice" to connect with your Python model.
-                </p>
-              </div>
+              {result ? (
+                <div className="text-center space-y-4">
+                  <h3 className="text-xl font-display font-semibold">
+                    Prediction: <span className="text-blue-600">{result.prediction}</span>
+                  </h3>
+                  <p className="text-muted-foreground">Confidence: {(result.confidence * 100).toFixed(2)}%</p>
+                </div>
+              ) : (
+                <div className="text-center space-y-4">
+                  <Mic className="h-16 w-16 text-muted-foreground mx-auto" />
+                  <h3 className="text-xl font-display font-semibold text-muted-foreground">Ready for Voice Analysis</h3>
+                  <p className="text-muted-foreground max-w-sm">
+                    Upload an audio file or record your voice, then click "Analyze Voice".
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>
