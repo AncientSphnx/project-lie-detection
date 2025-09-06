@@ -53,7 +53,7 @@ export const Login: React.FC = () => {
               Welcome Back
             </CardTitle>
             <CardDescription>
-              Sign in to access your AI Lie Detection dashboard
+              Sign in to access your VeriCloud dashboard
             </CardDescription>
           </CardHeader>
           

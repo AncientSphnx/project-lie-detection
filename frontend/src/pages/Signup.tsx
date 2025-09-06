@@ -62,7 +62,7 @@ export const Signup: React.FC = () => {
               Create Account
             </CardTitle>
             <CardDescription>
-              Join the AI Lie Detection System today
+              Join VeriCloud today
             </CardDescription>
           </CardHeader>
           

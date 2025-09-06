@@ -27,8 +27,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             onDarkModeToggle={toggleDarkMode}
           />
           
-          <main className="flex-1 overflow-auto">
-            <div className="p-6">
+          <main className="flex-1 overflow-auto bg-muted/20">
+            <div className="container mx-auto p-4 md:p-6 max-w-7xl">
               {children || <Outlet />}
             </div>
           </main>

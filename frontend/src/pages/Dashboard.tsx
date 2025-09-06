@@ -92,7 +92,7 @@ export const Dashboard: React.FC = () => {
         className="mb-8"
       >
         <h1 className="text-4xl font-bold mb-2">
-          Welcome back, <span className="text-blue-600 font-display font-semibold">{user?.name}</span>
+          Welcome back, <span className="text-blue-600 font-display font-semibold">{user?.username}</span>
         </h1>
         <p className="text-muted-foreground text-lg">
           Ready to analyze truth patterns with AI-powered detection

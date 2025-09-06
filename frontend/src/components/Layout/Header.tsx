@@ -32,15 +32,11 @@ export const Header: React.FC<HeaderProps> = ({
           <Menu className="h-5 w-5" />
         </Button>
         
-        <div className="hidden lg:block">
-          <h1 className="text-lg font-semibold">
-            Welcome back, {user?.name || 'User'}
-          </h1>
-        </div>
+        
       </div>
 
       <div className="flex items-center space-x-2">
-        <Dialog open={demoOpen} onOpenChange={setDemoOpen}>
+        {/*<Dialog open={demoOpen} onOpenChange={setDemoOpen}>
           <DialogTrigger asChild>
             <Button
               variant="brand"
@@ -57,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
             </DialogHeader>
             <DemoMode onDemoComplete={() => setDemoOpen(false)} />
           </DialogContent>
-        </Dialog>
+        </Dialog>*/}
 
         <Button
           variant="ghost"

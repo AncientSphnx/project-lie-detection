@@ -94,20 +94,20 @@ function App() {
                 </Layout>
               </ProtectedRoute>
             } />
-            <Route path="/faq" element={
+            {/*<Route path="/faq" element={
               <ProtectedRoute>
                 <Layout>
                   <FAQ />
                 </Layout>
               </ProtectedRoute>
-            } />
-            <Route path="/contact" element={
+            } />*/}
+            {/*<Route path="/contact" element={
               <ProtectedRoute>
                 <Layout>
                   <Contact />
                 </Layout>
               </ProtectedRoute>
-            } />
+            } />*/}
           </Routes>
         </div>
       </Router>

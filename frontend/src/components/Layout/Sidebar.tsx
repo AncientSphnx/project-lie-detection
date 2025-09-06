@@ -26,8 +26,8 @@ const sidebarItems = [
   { path: '/reports', icon: FileText, label: 'Reports' },
   { path: '/about', icon: Info, label: 'About' },
   { path: '/how-it-works', icon: HelpCircle, label: 'How It Works' },
-  { path: '/faq', icon: HelpCircle, label: 'FAQ' },
-  { path: '/contact', icon: Mail, label: 'Contact' },
+  //{ path: '/faq', icon: HelpCircle, label: 'FAQ' },
+  //{ path: '/contact', icon: Mail, label: 'Contact' },
 ]
 
 interface SidebarProps {
@@ -51,17 +51,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       
       {/* Sidebar */}
       <motion.div
-        initial={{ x: -300 }}
-        animate={{ x: isOpen ? 0 : -300 }}
+        initial={{ x: 0 }}
+        animate={{ x: 0}}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
         className="fixed left-0 top-0 h-full w-64 bg-card border-r border-border z-50 lg:relative lg:translate-x-0 lg:z-auto"
       >
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-6 border-b border-border">
-            <h2 className="text-xl font-bold text-neon-blue neon-text">
-              AI Lie Detection
-            </h2>
+          <Link to="/about" onClick={onClose} className="block">
+            <img 
+              src="/logo1.png" 
+              alt="AI Lie Detection Logo" 
+              className="w-full h-auto object-contain" 
+            />
+          </Link>
             {user && (
               <div className="mt-2 flex items-center space-x-2">
                 <User className="h-4 w-4 text-muted-foreground" />

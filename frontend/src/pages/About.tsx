@@ -15,40 +15,28 @@ import { Button } from '../components/ui/button'
 export const About: React.FC = () => {
   const teamMembers = [
     {
-      name: 'Dr. Sarah Chen',
-      role: 'AI Research Lead',
+      name: 'Numan',
+      role: 'Voice Analysis',
       image: '/api/placeholder/150/150',
-      bio: 'PhD in Machine Learning with 10+ years in behavioral analysis',
-      linkedin: '#',
-      github: '#'
     },
     {
-      name: 'Marcus Rodriguez',
-      role: 'Full Stack Developer',
+      name: 'Gagan kumar',
+      role: 'Face Analysis',
       image: '/api/placeholder/150/150',
-      bio: 'Expert in React, Node.js, and real-time data processing',
-      linkedin: '#',
-      github: '#'
     },
     {
-      name: 'Dr. Emily Watson',
-      role: 'Psychology Consultant',
+      name: 'Niharaka S P',
+      role: 'Cloud',
       image: '/api/placeholder/150/150',
-      bio: 'Forensic psychologist specializing in deception detection',
-      linkedin: '#',
-      github: '#'
     },
     {
-      name: 'Alex Kim',
-      role: 'Data Scientist',
+      name: 'Pretty Evanglin',
+      role: 'Text Analysis',
       image: '/api/placeholder/150/150',
-      bio: 'Specialist in signal processing and pattern recognition',
-      linkedin: '#',
-      github: '#'
     }
   ]
 
-  const timeline = [
+  /*const timeline = [
     {
       phase: 'Research Phase',
       period: 'Jan 2023 - Mar 2023',
@@ -85,7 +73,7 @@ export const About: React.FC = () => {
       description: 'Extensive testing and continuous improvement based on user feedback',
       color: 'neon-purple'
     }
-  ]
+  ]*/
 
   return (
     <div className="space-y-12">
@@ -160,7 +148,7 @@ export const About: React.FC = () => {
                 </p>
               </div>
               <div className="text-center p-4 bg-neon-green/10 rounded-lg border border-neon-green/30">
-                <h3 className="font-semibold text-neon-green mb-2">Handwriting Analysis</h3>
+                <h3 className="font-semibold text-neon-green mb-2">Text Analysis</h3>
                 <p className="text-sm text-muted-foreground">
                   Examines pressure, slant, spacing, and other graphological features
                 </p>
@@ -170,7 +158,7 @@ export const About: React.FC = () => {
         </Card>
       </motion.section>
 
-      {/* Project Timeline */}
+      {/* Project Timeline 
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -203,7 +191,7 @@ export const About: React.FC = () => {
             </motion.div>
           ))}
         </div>
-      </motion.section>
+      </motion.section>*/}
 
       {/* Team Section */}
       <motion.section
@@ -229,7 +217,6 @@ export const About: React.FC = () => {
                   </div>
                   <h3 className="font-semibold text-lg mb-1">{member.name}</h3>
                   <p className="text-neon-purple text-sm mb-3">{member.role}</p>
-                  <p className="text-xs text-muted-foreground mb-4">{member.bio}</p>
                   <div className="flex justify-center space-x-2">
                     <Button variant="ghost" size="sm">
                       <Linkedin className="h-4 w-4" />

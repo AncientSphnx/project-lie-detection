@@ -15,7 +15,7 @@ export const Landing: React.FC = () => {
     {
       icon: Shield,
       title: 'Multi-Modal Detection',
-      description: 'Combines voice, facial expression, and handwriting analysis for comprehensive results.'
+      description: 'Combines voice, facial expression, and text analysis for comprehensive results.'
     },
     {
       icon: Zap,
@@ -41,17 +41,15 @@ export const Landing: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              <span className="text-neon-blue neon-text">AI-Driven</span>
-              <br />
-              <span className="text-neon-purple neon-text">Lie Detection</span>
-              <br />
-              <span className="text-neon-green neon-text">System</span>
-            </h1>
+            <img 
+              src="/logo1.png" 
+              alt="AI Lie Detection Logo" 
+              className="w-full h-auto object-contain" 
+            />
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Advanced truth analysis using cutting-edge AI technology. 
-              Analyze voice patterns, facial expressions, and handwriting to detect deception with unprecedented accuracy.
+              Analyze voice patterns, facial expressions, and Text to detect deception with unprecedented accuracy.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -141,7 +139,7 @@ export const Landing: React.FC = () => {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[
-              { step: '01', title: 'Input Data', desc: 'Upload voice, video, or handwriting samples' },
+              { step: '01', title: 'Input Data', desc: 'Upload voice, video, or text samples' },
               { step: '02', title: 'AI Analysis', desc: 'Our algorithms analyze patterns and extract features' },
               { step: '03', title: 'Get Results', desc: 'Receive detailed analysis with confidence scores' }
             ].map((item, index) => (
@@ -174,13 +172,9 @@ export const Landing: React.FC = () => {
             <h2 className="text-4xl font-bold mb-4 text-neon-blue neon-text">
               Ready to Get Started?
             </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of users who trust our AI-powered lie detection system 
-              for accurate and reliable truth analysis.
-            </p>
             <Link to="/signup">
               <Button variant="brand" size="lg" className="text-lg px-8 py-3">
-                Start Free Trial
+                Sign Up
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
